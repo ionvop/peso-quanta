@@ -54,7 +54,7 @@ function Alert($message, $redirect = "") {
 }
 
 function GetDatabase() {
-    $result = new mysqli("localhost", "root", null, "peso_quanta", 3306);
+    $result = new mysqli("localhost", "u303287543_peso_quanta", "177013Lmao", "u303287543_peso_quanta");
     return $result;
 }
 
@@ -119,18 +119,6 @@ function SetSidebar() {
                     </div>
                 </div>
             </div>
-            <div class="-sidebar__app -sidebar__tab">
-                <div class="-sidebar__tab__box -script__link" data-href="dashboard/apps/">
-                    <div class="-sidebar__tab__box__icon -title -center__flex">
-                        <span class="material-symbols-rounded">
-                            settings
-                        </span>
-                    </div>
-                    <div class="-sidebar__tab__box__label">
-                        Manage App
-                    </div>
-                </div>
-            </div>
             <div class="-sidebar__user -sidebar__tab">
                 <div class="-sidebar__tab__box -script__link" data-href="dashboard/users/">
                     <div class="-sidebar__tab__box__icon -title -center__flex">
@@ -139,7 +127,19 @@ function SetSidebar() {
                         </span>
                     </div>
                     <div class="-sidebar__tab__box__label">
-                        User Management
+                        Users
+                    </div>
+                </div>
+            </div>
+            <div class="-sidebar__request -sidebar__tab">
+                <div class="-sidebar__tab__box -script__link" data-href="dashboard/requests/">
+                    <div class="-sidebar__tab__box__icon -title -center__flex">
+                        <span class="material-symbols-rounded">
+                            person_add
+                        </span>
+                    </div>
+                    <div class="-sidebar__tab__box__label">
+                        Requests
                     </div>
                 </div>
             </div>
@@ -159,21 +159,72 @@ function RenderUser($user) {
                         <img src="assets/user.png">
                     </div>
                     <div class="item__box__id__label">
-                        USER{$user["id"]}
+                        ID {$user["id"]}
                     </div>
                 </div>
-                <div class="item__box__username -center__flex">
-                    {$user["username"]}
+                <div class="item__box__firstname -center">
+                    {$user["firstname"]}
                 </div>
-                <div class="item__box__password -center__flex">
-                    {$user["password"]}
+                <div class="item__box__lastname -center">
+                    {$user["lastname"]}
                 </div>
-                <div class="item__box__date -center__flex">
+                <div class="item__box__email -center">
+                    {$user["email"]}
+                </div>
+                <div class="item__box__phone -center">
+                    {$user["phone"]}
+                </div>
+                <div class="item__box__date -center">
                     {$user["time"]}
                 </div>
-                <div class="item__box__options -center__flex">
+                <div class="item__box__options -center__flex" onclick="btnOption(this)">
                     <span class="material-symbols-rounded">
                         more_horiz
+                    </span>
+                </div>
+            </div>
+        </div>
+    HTML;
+}
+
+function RenderRequest($user) {
+    $time = strtotime($user["time"]);
+    $user["time"] = date("n/j/Y", $time);
+
+    return <<<HTML
+        <div class="item">
+            <div class="item__box">
+                <div class="item__box__id">
+                    <div class="item__box__id__icon -center__flex">
+                        <img src="assets/user.png">
+                    </div>
+                    <div class="item__box__id__label">
+                        ID {$user["id"]}
+                    </div>
+                </div>
+                <div class="item__box__firstname -center">
+                    {$user["firstname"]}
+                </div>
+                <div class="item__box__lastname -center">
+                    {$user["lastname"]}
+                </div>
+                <div class="item__box__email -center">
+                    {$user["email"]}
+                </div>
+                <div class="item__box__phone -center">
+                    {$user["phone"]}
+                </div>
+                <div class="item__box__date -center">
+                    {$user["time"]}
+                </div>
+                <div class="item__box__options -center__flex" onclick="btnDeny(this)">
+                    <span class="material-symbols-rounded">
+                        close
+                    </span>
+                </div>
+                <div class="item__box__options -center__flex" onclick="btnAllow(this)">
+                    <span class="material-symbols-rounded">
+                        check
                     </span>
                 </div>
             </div>

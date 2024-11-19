@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <title>
+            Menu
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .content {
+                display: grid;
+                grid-template-rows: 1fr max-content;
+            }
+
+            .content__mid {
+                overflow: auto;
+            }
+
+            .profile {
+                display: grid;
+                grid-template-columns: max-content 1fr max-content;
+                background-color: var(--theme);
+            }
+
+            .profile__avatar {
+                padding: 3rem;
+            }
+
+            .profile__avatar > img {
+                width: 5rem;
+                height: 5rem;
+                object-fit: cover;
+                border-radius: 3rem;
+            }
+
+            .profile__info {
+                display: flex;
+                align-items: center;
+            }
+
+            .profile__info__name {
+                padding: 1rem;
+                color: #fff;
+            }
+
+            .profile__info__email {
+                padding: 1rem;
+                padding-top: 0rem;
+                color: #fff;
+            }
+
+            .profile__more {
+                padding: 1rem;
+                color: #fff;
+            }
+
+            .profile__more > svg {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            .account, .about, .terms {
+                padding: 1rem;
+                color: #055;
+            }
+
+            .logout {
+                padding-top: 5rem;
+                display: grid;
+                grid-template-columns: max-content 1fr;
+            }
+
+            .logout__icon {
+                padding: 1rem;
+            }
+
+            .logout__icon > svg {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            .logout__text {
+                display: flex;
+                align-items: center;
+                padding: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__menu">
+            <div class="content -content">
+                <div class="content__mid">
+                    <div class="profile">
+                        <div class="profile__avatar">
+                            <img src="assets/image.png">
+                        </div>
+                        <div class="profile__info">
+                            <div>
+                                <div class="profile__info__name -title">
+                                    Name
+                                </div>
+                                <div class="profile__info__email">
+                                    test@example.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile__more -center__flex" onclick="btnAccount(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path></svg>
+                        </div>
+                    </div>
+                    <div class="account" onclick="btnAccount(this)">
+                        My Account
+                    </div>
+                    <div class="about" onclick="btnAbout(this)">
+                        About Us
+                    </div>
+                    <div class="terms" onclick="btnTerms(this)">
+                        Terms and Conditions
+                    </div>
+                    <div class="logout" onclick="btnLogout(this)">
+                        <div class="logout__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 22C4.44772 22 4 21.5523 4 21V3C4 2.44772 4.44772 2 5 2H19C19.5523 2 20 2.44772 20 3V6H18V4H6V20H18V18H20V21C20 21.5523 19.5523 22 19 22H5ZM18 16V13H11V11H18V8L23 12L18 16Z"></path></svg>
+                        </div>
+                        <div class="logout__text">
+                            Logout
+                        </div>
+                    </div>
+                </div>
+                <div class="content__bottom -script__buttons"></div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        fetch(ServerUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                method: "getUser",
+                userid: GetCookie("peso_quanta__userid")
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.status == 200) {
+                document.querySelector(".profile__info__name").innerText = `${data.message.firstname} ${data.message.lastname}`;
+                document.querySelector(".profile__info__email").innerText = data.message.email;
+            } else {
+                alert(data.message);
+            }
+        });
+
+        function btnLogout(element) {
+            DeleteCookie("peso_quanta__userid");
+            location.href = "login/";
+        }
+
+        function btnAccount(element) {
+            location.href = "account/";
+        }
+
+        function btnAbout(element) {
+            location.href = "about/";
+        }
+
+        function btnTerms(element) {
+            location.href = "terms/";
+        }
+    </script>
+</html>

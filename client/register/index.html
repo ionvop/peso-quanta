@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <title>
+            Register
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .welcome {
+                padding: 5rem;
+                padding-top: 5rem;
+                padding-bottom: 0rem;
+                font-size: 3rem;
+                color: var(--theme);
+            }
+
+            .firstname {
+                padding: 5rem;
+                padding-bottom: 0rem;
+            }
+
+            .lastname {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .email {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .phone {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .password {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .repassword {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .button {
+                padding: 5rem;
+                padding-bottom: 0rem;
+            }
+
+            .login {
+                padding: 1rem;
+                padding-top: 3rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__login">
+            <div class="content -content">
+                <div class="welcome">
+                    <strong>Welcome</strong>
+                </div>
+                <div class="firstname">
+                    <input class="-input" placeholder="First name">
+                </div>
+                <div class="lastname">
+                    <input class="-input" placeholder="Last name">
+                </div>
+                <div class="email">
+                    <input class="-input" type="email" placeholder="Email">
+                </div>
+                <div class="phone">
+                    <input class="-input" type="tel" placeholder="Contact number">
+                </div>
+                <div class="password">
+                    <input class="-input" type="password" placeholder="Password">
+                </div>
+                <div class="repassword">
+                    <input class="-input" type="password" placeholder="Confirm password">
+                </div>
+                <div class="button -center">
+                    <button class="-button" onclick="btnRegister(this)">
+                        Register
+                    </button>
+                </div>
+                <div class="login -center">
+                    Already have an account? <a href="login/">Login</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        function btnRegister(element) {
+            if (document.querySelector(".password input").value != document.querySelector(".repassword input").value) {
+                alert("Password does not match");
+                return;
+            }
+
+            element.style.backgroundColor = "#aaa";
+            element.disabled = true;
+
+            fetch(ServerUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    method: "register",
+                    firstname: document.querySelector(".firstname input").value,
+                    lastname: document.querySelector(".lastname input").value,
+                    email: document.querySelector(".email input").value,
+                    phone: document.querySelector(".phone input").value,
+                    password: document.querySelector(".password input").value
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.status == 200) {
+                    alert("Account created successfully. Waiting for admin approval...");
+                    location.href = "./";
+                } else {
+                    alert(data.message);
+                    element.style.backgroundColor = "";
+                    element.disabled = false;
+                }
+            }).catch(error => {
+                alert(error);
+                element.style.backgroundColor = "";
+                element.disabled = false;
+            });
+        }
+    </script>
+</html>

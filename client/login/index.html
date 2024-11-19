@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <title>
+            Login
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .welcome {
+                padding: 5rem;
+                padding-top: 10rem;
+                padding-bottom: 0rem;
+                font-size: 3rem;
+                color: var(--theme);
+            }
+
+            .login {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+                color: var(--theme);
+            }
+
+            .email {
+                padding: 5rem;
+                padding-bottom: 0rem;
+            }
+
+            .password {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .forgot_password {
+                display: grid;
+                grid-template-columns: 1fr max-content;
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .button {
+                padding: 5rem;
+            }
+
+            .register {
+                padding: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__login">
+            <div class="content -content">
+                <div class="welcome">
+                    <strong>Hello</strong>
+                </div>
+                <div class="login">
+                    Please login
+                </div>
+                <div class="email">
+                    <input class="-input" type="email" placeholder="Email">
+                </div>
+                <div class="password">
+                    <input class="-input" type="password" placeholder="Password">
+                </div>
+                <div class="forgot_password">
+                    <div></div>
+                    <div class="forgot_password__text -subtitle">
+                        Forgot Password?
+                    </div>
+                </div>
+                <div class="button -center">
+                    <button class="-button" onclick="btnLogin(this)">
+                        Login
+                    </button>
+                </div>
+                <div class="register -center">
+                    Don't have an account? <a href="register">Register</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        function btnLogin(element) {
+            element.style.backgroundColor = "#aaa";
+            element.disabled = true;
+
+            fetch(ServerUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    method: "login",
+                    email: document.querySelector(".email input").value,
+                    password: document.querySelector(".password input").value
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.status == 200) {
+                    SetCookie("peso_quanta__userid", data.message.id, 86400);
+                    location.href = "home/";
+                } else {
+                    console.log(data);
+                    alert(data.message);
+                    element.style.backgroundColor = "";
+                    element.disabled = false;
+                }
+            }).catch(error => {
+                console.log(error);
+                alert(error);
+                element.style.backgroundColor = "";
+                element.disabled = false;
+            });
+        }
+    </script>
+</html>

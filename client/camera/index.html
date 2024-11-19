@@ -1,0 +1,363 @@
+<html>
+    <head>
+        <title>
+            Camera
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .content {
+                display: grid;
+                grid-template-rows: repeat(2, max-content) 1fr max-content;
+            }
+
+            .content__coins {
+                padding: 1rem;
+            }
+
+            .content__coins > img {
+                width: 100%;
+                object-fit: contain;
+            }
+
+            .content__mid {
+                overflow: auto;
+            }
+
+            .capture {
+                display: grid;
+                grid-template-rows: 1fr max-content;
+                height: 100%;
+            }
+
+            .camera {
+                overflow: hidden;
+            }
+
+            .camera > iframe {
+                width: 100%;
+                height: 100%;
+            }
+
+            .confirm {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .confirm__no {
+                padding: 1rem;
+            }
+
+            .confirm__no > svg {
+                width: 5rem;
+                height: 5rem;
+                object-fit: contain;
+            }
+
+            .confirm__yes {
+                padding: 1rem;
+            }
+
+            .confirm__yes > svg {
+                width: 5rem;
+                height: 5rem;
+                object-fit: contain;
+            }
+
+            .result__title {
+                color: var(--theme);
+                font-weight: bolder;
+            }
+
+            .result__preview {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .count__title {
+                padding: 1rem;
+                color: var(--theme);
+            }
+
+            .count__value {
+                padding: 1rem;
+                font-weight: bolder;
+            }
+
+            .result__preview__image {
+                padding: 1rem;
+            }
+
+            .result__preview__image > img {
+                width: 100%;
+                object-fit: contain;
+            }
+
+            .result__details {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .coins__title {
+                padding: 1rem;
+                color: var(--theme);
+                font-weight: bolder;
+            }
+
+            .coins__list > div {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+            }
+
+            .coins__value {
+                font-size: 1rem;
+            }
+
+            .coins__image {
+                padding: 0.5rem;
+            }
+
+            .coins__image > img {
+                width: 3rem;
+                height: 3rem;
+                object-fit: contain;
+            }
+
+            .result__details__total {
+                display: grid;
+                grid-template-rows: 1fr max-content;
+            }
+
+            .total__title {
+                padding: 1rem;
+                color: var(--theme);
+                font-weight: bolder;
+            }
+
+            .total__value {
+                padding: 1rem;
+            }
+
+            .total__save {
+                padding: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__camera">
+            <div class="content -content">
+                <div class="content__top -script__header"></div>
+                <div class="content__coins">
+                    <img src="assets/coins.png">
+                </div>
+                <div class="content__mid">
+                    <div class="capture">
+                        <div class="camera -center__flex">
+                            <iframe src="assets/camera.html" frameborder="0"></iframe>
+                        </div>
+                        <div class="confirm">
+                            <div class="confirm__no -center" onclick="btnCancel(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path></svg>
+                            </div>
+                            <div></div>
+                            <div class="confirm__yes -center" onclick="btnConfirm(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result">
+                        <div class="result__title -center -title">
+                            RESULT
+                        </div>
+                        <div class="result__preview">
+                            <div class="result__preview__count">
+                                <div class="count__title -center">
+                                    The number of Coins
+                                </div>
+                                <div class="count__result -center -title">
+                                    0
+                                </div>
+                            </div>
+                            <div class="result__preview__image">
+                                <img src="assets/image.png">
+                            </div>
+                        </div>
+                        <div class="result__details">
+                            <div class="result__details__coins">
+                                <div class="coins__title -center">
+                                    COINS VALUE
+                                </div>
+                                <div class="coins__list">
+                                    <div class="p1pesoold">
+                                        <div class="coins__image">
+                                            <img src="assets/1pesoold.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p1peso">
+                                        <div class="coins__image">
+                                            <img src="assets/1pesonew.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p5pesoold">
+                                        <div class="coins__image">
+                                            <img src="assets/5pesoold.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p5peso">
+                                        <div class="coins__image">
+                                            <img src="assets/5pesonew.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p10pesoold">
+                                        <div class="coins__image">
+                                            <img src="assets/10pesoold.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p10peso">
+                                        <div class="coins__image">
+                                            <img src="assets/10pesonew.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                    <div class="p20peso">
+                                        <div class="coins__image">
+                                            <img src="assets/20peso.png">
+                                        </div>
+                                        <div class="coins__value -center__flex">
+                                            0 (Php 0)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result__details__total">
+                                <div class="total__container -center__flex">
+                                    <div class="total">
+                                        <div class="total__title -center">
+                                            TOTAL COINS VALUE
+                                        </div>
+                                        <div class="total__value -center">
+                                            Php 0
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="total__save -center">
+                                    <button class="-button" onclick="btnSave(this)">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content__bottom -script__buttons"></div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        let imageData = "";
+        let saveResult = 0;
+        let response = {};
+        document.querySelector(".confirm").style.visibility = "hidden";
+        document.querySelector(".result").style.display = "none";
+        document.querySelector(".-script__buttons__camera > img").style.color = "var(--theme)";
+
+        window.addEventListener("message", function(event) {
+            response = JSON.parse(event.data);
+            document.querySelector(".confirm").style.visibility = "visible";
+        });
+
+        function btnCancel(element) {
+            document.querySelector(".confirm").style.visibility = "hidden";
+            document.querySelector(".camera > iframe").contentWindow.location.reload();
+        }
+
+        function btnConfirm(element) {
+            document.querySelector(".confirm").style.visibility = "hidden";
+            let data = response.data;
+            console.log(data);
+
+            let result = {
+                "1pesoold": 0,
+                "1peso": 0,
+                "5pesoold": 0,
+                "5peso": 0,
+                "10pesoold": 0,
+                "10peso": 0,
+                "20peso": 0
+            };
+
+            let coinValue = {
+                "1pesoold": 1,
+                "1peso": 1,
+                "5pesoold": 5,
+                "5peso": 5,
+                "10pesoold": 10,
+                "10peso": 10,
+                "20peso": 20
+            };
+
+            data.predictions.forEach(element => {
+                if (element.class in result) {
+                    result[element.class] += 1;
+                }
+            });
+
+            let totalCount = 0;
+            let totalValue = 0;
+
+            for (let key in result) {
+                document.querySelector(`.p${key} .coins__value`).innerText = `Php ${coinValue[key]} x ${result[key]} (Php ${result[key] * coinValue[key]})`;
+                totalCount += result[key];
+                totalValue += result[key] * coinValue[key];
+            }
+
+            document.querySelector(".count__result").innerText = totalCount;
+            document.querySelector(".total__value").innerText = `Php ${totalValue}`;
+            document.querySelector(".capture").style.display = "none";
+            document.querySelector(".result").style.display = "";
+            document.querySelector(".result__preview__image > img").src = response.image;
+            saveResult = totalValue;
+        }
+
+        function btnSave(element) {
+            fetch(ServerUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    method: "save",
+                    image: imageData,
+                    result: saveResult,
+                    userid: GetCookie("peso_quanta__userid")
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.status == 200) {
+                    location.href = "home/";
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    </script>
+</html>

@@ -14,6 +14,15 @@ if (isset($_POST["method"])) {
         case "updateAdmin":
             UpdateAdmin();
             break;
+        case "verifyUser":
+            VerifyUser();
+            break;
+        case "deleteUser":
+            DeleteUser();
+            break;
+        case "denyUser":
+            DenyUser();
+            break;
     }
 }
 
@@ -37,7 +46,7 @@ function Login() {
 
     $admin = $result->fetch_assoc();
     
-    if ($admin["password"] != $_POST["password"]) {
+    if ($admin["password"] != base64_encode($_POST["password"])) {
         $query = <<<SQL
             INSERT INTO `admin_logs`(`admin_id`, `status`) VALUES (?, ?);
         SQL;
@@ -105,7 +114,50 @@ function UpdateAdmin() {
     header("Location: dashboard/");
 }
 
+function VerifyUser() {
+    $sql = GetDatabase();
+
+    $query = <<<SQL
+        UPDATE `users`
+        SET `is_verified` = 1
+        WHERE `id` = ?;
+    SQL;
+
+    $stmt = $sql->prepare($query);
+    $stmt->bind_param("i", $_POST["id"]);
+    $stmt->execute();
+    header("Location: dashboard/requests/");
+}
+
+function DeleteUser() {
+    $sql = GetDatabase();
+
+    $query = <<<SQL
+        DELETE FROM `users` WHERE `id` = ?;
+    SQL;
+
+    $stmt = $sql->prepare($query);
+    $stmt->bind_param("i", $_POST["id"]);
+    $stmt->execute();
+    header("Location: dashboard/users/");
+}
+
+function DenyUser() {
+    $sql = GetDatabase();
+
+    $query = <<<SQL
+        DELETE FROM `users` WHERE `id` = ?;
+    SQL;
+
+    $stmt = $sql->prepare($query);
+    $stmt->bind_param("i", $_POST["id"]);
+    $stmt->execute();
+    header("Location: dashboard/requests/");
+}
+
 function DefaultMethod() {
+    Breakpoint(base64_encode("177013"));
+
     Breakpoint([
         "post" => $_POST,
         "files" => $_FILES

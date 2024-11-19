@@ -1,0 +1,309 @@
+<html>
+    <head>
+        <title>
+            Home
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .content {
+                display: grid;
+                grid-template-rows: max-content 1fr max-content;
+            }
+
+            .content__mid {
+                overflow: auto;
+            }
+
+            .balance {
+                padding: 1rem;
+                background-color: var(--theme);
+                color: #fff;
+            }
+
+            .balance__amount {
+                font-size: 3rem;
+                font-weight: bolder;
+            }
+
+            .report {
+                display: grid;
+                grid-template-columns: repeat(2, max-content) 1fr max-content;
+            }
+
+            .report__icon {
+                padding: 1rem;
+            }
+
+            .report__icon > img {
+                width: 3rem;
+                height: 3rem;
+                object-fit: contain;
+            }
+
+            .report__title {
+                padding: 1rem;
+                color: var(--theme);
+                font-weight: bolder;
+            }
+
+            .report__view {
+                padding: 1rem;
+                color: var(--theme);
+                font-weight: bolder;
+            }
+
+            .graph {
+                padding: 1rem;
+            }
+
+            .graph > iframe {
+                width: 100%;
+                aspect-ratio: 387/227;
+            }
+
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .stats__today__label {
+                padding: 1rem;
+            }
+
+            .stats__today__value {
+                padding: 1rem;
+                padding-top: 0rem;
+                font-weight: bolder;
+            }
+
+            .stats__week__label {
+                padding: 1rem;
+            }
+
+            .stats__week__value {
+                padding: 1rem;
+                padding-top: 0rem;
+                font-weight: bolder;
+            }
+
+            .stats__month__label {
+                padding: 1rem;
+            }
+
+            .stats__month__value {
+                padding: 1rem;
+                padding-top: 0rem;
+                font-weight: bolder;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__home">
+            <div class="content -content">
+                <div class="content__top -script__header"></div>
+                <div class="content__mid">
+                    <div class="balance">
+                        <div class="balance__text">
+                            Current coin count
+                        </div>
+                        <div class="balance__amount">
+                            Php 0
+                        </div>
+                    </div>
+                    <div class="report">
+                        <div class="report__icon">
+                            <img src="assets/icon.png">
+                        </div>
+                        <div class="report__title -center__flex">
+                            Coins report
+                        </div>
+                        <div></div>
+                        <div class="report__view -center__flex" onclick="btnViewReport(this)">
+                            View all
+                        </div>
+                    </div>
+                    <div class="graph">
+                        <iframe src="" frameborder="0"></iframe>
+                    </div>
+                    <div class="stats">
+                        <div class="stats__today">
+                            <div class="stats__today__label -center">
+                                Today
+                            </div>
+                            <div class="stats__today__value -center">
+                                Php 0
+                            </div>
+                        </div>
+                        <div class="stats__week">
+                            <div class="stats__week__label -center">
+                                This week
+                            </div>
+                            <div class="stats__week__value -center">
+                                Php 0
+                            </div>
+                        </div>
+                        <div class="stats__month">
+                            <div class="stats__month__label -center">
+                                This month
+                            </div>
+                            <div class="stats__month__value -center">
+                                Php 0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content__bottom -script__buttons"></div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        document.querySelector(".-script__buttons__home > svg").style.color = "var(--theme)";
+
+        if (GetCookie("peso_quanta__userid") == "") {
+            location.href = "login/";
+        }
+
+        fetch(ServerUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                method: "getBalance",
+                userid: GetCookie("peso_quanta__userid")
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.status == 200) {
+                document.querySelector(".balance__amount").innerText = `Php ${data.message}`;
+            } else {
+                alert(data.message);
+            }
+        });
+
+        fetch(ServerUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                method: "history",
+                userid: GetCookie("peso_quanta__userid")
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.status == 200) {
+                for (let element of data.message) {
+                    element.time = new Date(element.time).getTime();
+                }
+
+                data.message = filterByCurrentYear(data.message);
+                let months = sumValuesByMonth(data.message);
+                console.log(data.message);
+                console.log(months);
+                let monthData = JSON.stringify(months);
+                monthData = btoa(monthData);
+                console.log(monthData);
+                let graphUrl = new URL("assets/graph.html", document.baseURI);
+                graphUrl.searchParams.append("data", monthData);
+                document.querySelector(".graph > iframe").src = graphUrl;
+                let todayTotal = 0;
+                let weekTotal = 0;
+                let monthTotal = 0;
+
+                filterByCurrentDay(data.message).forEach(element => {
+                    todayTotal += element.value;
+                });
+                
+                filterByCurrentWeek(data.message).forEach(element => {
+                    weekTotal += element.value;
+                });
+
+                filterByCurrentMonth(data.message).forEach(element => {
+                    monthTotal += element.value;
+                });
+
+                document.querySelector(".stats__today__value").innerText = `Php ${todayTotal}`;
+                document.querySelector(".stats__week__value").innerText = `Php ${weekTotal}`;
+                document.querySelector(".stats__month__value").innerText = `Php ${monthTotal}`;
+            } else {
+                alert(data.message);
+            }
+        });
+
+        function sumValuesByMonth(data) {
+            const months = {
+                january: 0,
+                february: 0,
+                march: 0,
+                april: 0,
+                may: 0,
+                june: 0,
+                july: 0,
+                august: 0,
+                september: 0,
+                october: 0,
+                november: 0,
+                december: 0
+            };
+
+            data.forEach(entry => {
+                const date = new Date(entry.time);
+                const monthIndex = date.getMonth();
+                const monthNames = Object.keys(months);
+                const monthName = monthNames[monthIndex];
+                months[monthName] += entry.value;
+            });
+
+            return months;
+        }
+
+        function filterByCurrentYear(data) {
+            const currentYear = new Date().getFullYear();
+
+            return data.filter(entry => {
+                const date = new Date(entry.time);
+                return date.getFullYear() === currentYear;
+            });
+        }
+
+        function filterByCurrentDay(data) {
+            const currentDay = new Date().getDate();
+
+            return data.filter(entry => {
+                const date = new Date(entry.time);
+                return date.getDate() === currentDay;
+            });
+        }
+
+        function filterByCurrentMonth(data) {
+            const currentMonth = new Date().getMonth();
+
+            return data.filter(entry => {
+                const date = new Date(entry.time);
+                return date.getMonth() === currentMonth;
+            });
+        }
+
+        function filterByCurrentWeek(data) {
+            const currentDate = new Date();
+            const startOfWeek = new Date(currentDate);
+            startOfWeek.setHours(0, 0, 0, 0);
+            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+
+            return data.filter(entry => {
+                const entryDate = new Date(entry.time);
+                return entryDate >= startOfWeek && entryDate <= endOfWeek;
+            });
+        }
+
+        function btnViewReport(element) {
+            location.href = "report/";
+        }
+    </script>
+</html>

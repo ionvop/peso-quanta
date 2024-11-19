@@ -1,0 +1,150 @@
+:root {
+    --theme: #257b57;
+}
+
+.test {
+    outline: 0.1rem solid #0f0;
+}
+
+html {
+    font-size: 3vw;
+}
+
+body {
+    margin: 0rem;
+    padding: 0rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
+
+.-form {
+    margin: 0rem;
+    margin-block-end: 0rem;
+}
+
+.-button {
+    padding: 1rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    font-size: 1.5rem;
+    background-color: var(--theme);
+    color: #fff;
+    border: 0rem;
+    border-radius: 5rem;
+    cursor: pointer;
+}
+
+.-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.-input {
+    display: block;
+    padding: 1rem;
+    font-size: 1.5rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 0.1rem solid #000;
+    width: 100%;
+}
+
+.-textarea {
+    display: block;
+    padding: 1rem;
+    font-size: 1.5rem;
+    background-color: #aaa;
+    border: none;
+    border-radius: 1rem;
+    width: 100%;
+    resize: vertical;
+}
+
+.-content {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.-center {
+    text-align: center;
+}
+
+.-center__block {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.-center__flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.-title {
+    font-size: 2rem;
+}
+
+.-subtitle {
+    font-size: 1rem;
+    color: #aaa;
+}
+
+.-script__header {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+}
+
+.-script__header__logo {
+    padding: 1rem;
+}
+
+.-script__header__logo > img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+}
+
+.-script__header__menu {
+    padding: 1rem;
+}
+
+.-script__header__menu > svg {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+}
+
+.-script__buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.-script__buttons__home {
+    padding: 1rem;
+}
+
+.-script__buttons__home > svg {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+}
+
+.-script__buttons__camera {
+    padding: 1rem;
+}
+
+.-script__buttons__camera > img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+}
+
+.-script__buttons__history {
+    padding: 1rem;
+}
+
+.-script__buttons__history > svg {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+}

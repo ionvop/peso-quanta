@@ -1,0 +1,12 @@
+{
+  "name": "Peso Quanta",
+  "start_url": "peso-quanta/client/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <title>
+            Welcome
+        </title>
+        <base href="./">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .content {
+                display: grid;
+                grid-template-rows: 1fr max-content;
+            }
+
+            .logo {
+                padding: 1rem;
+            }
+
+            .logo > img {
+                width: 20rem;
+                height: 20rem;
+                object-fit: contain;
+            }
+
+            .welcome {
+                padding: 1rem;
+                padding-top: 5rem;
+            }
+
+            .slogan {
+                padding: 1rem;
+                padding-top: 5rem;
+            }
+
+            .content__bottom {
+                padding: 5rem;
+            }
+
+            .login {
+                padding: 1rem;
+                padding-top: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="content -content">
+                <div class="content__mid">
+                    <div class="logo -center">
+                        <img src="assets/logo.png">
+                    </div>
+                    <div class="welcome -title -center">
+                        Welcome to PESO QUANTA!
+                    </div>
+                    <div class="slogan -center">
+                        Experience an automated, reliable, accurate, and seamless way of counting coins.
+                    </div>
+                </div>
+                <div class="content__bottom">
+                    <div class="login -center">
+                        <button class="-button" onclick="btnGetStarted(this)">
+                            Get Started
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        let script = document.createElement('script');
+        script.src = 'script.js?v=' + new Date().getTime();
+        document.head.appendChild(script);
+
+        if (GetCookie("peso_quanta__userid") != "") {
+            fetch(ServerUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    method: "getUser",
+                    userid: GetCookie("peso_quanta__userid")
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.status == 200) {
+                    SetCookie("peso_quanta__userid", data.message.id, 86400);
+                    location.href = "home/";
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function btnGetStarted(element) {
+            location.href = "login/";
+        }
+    </script>
+</html>

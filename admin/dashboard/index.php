@@ -109,7 +109,7 @@ if ($admin == false) {
                                         $sql = GetDatabase();
 
                                         $query = <<<SQL
-                                            SELECT COUNT(*) FROM `users`;
+                                            SELECT COUNT(*) FROM `users` WHERE `is_verified` = 1;
                                         SQL;
 
                                         $stmt = $sql->prepare($query);
@@ -122,7 +122,7 @@ if ($admin == false) {
                                 <div></div>
                             </div>
                             <div class="box__users__label -title -center">
-                                USER
+                                USERS
                             </div>
                         </div>
                         <div class="box__apps">
@@ -132,12 +132,24 @@ if ($admin == false) {
                                     <img src="assets/app.png">
                                 </div>
                                 <div class="box__apps__display__version -center__flex">
-                                    V1
+                                <?php
+                                        $sql = GetDatabase();
+
+                                        $query = <<<SQL
+                                            SELECT COUNT(*) FROM `user_data`;
+                                        SQL;
+
+                                        $stmt = $sql->prepare($query);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        $row = $result->fetch_row();
+                                        echo $row[0];
+                                    ?>
                                 </div>
                                 <div></div>
                             </div>
                             <div class="box__apps__label -title -center">
-                                Application
+                                Total Scans
                             </div>
                         </div>
                     </div>

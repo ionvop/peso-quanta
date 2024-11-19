@@ -29,11 +29,23 @@ if ($admin == false) {
 
             .table__header {
                 display: grid;
-                grid-template-columns: repeat(4, 1fr) 5rem;
+                grid-template-columns: repeat(6, 1fr) repeat(2, 6rem);
                 color: var(--theme);
             }
 
-            .table__header__username {
+            .table__header__firstname {
+                padding: 1rem;
+            }
+
+            .table__header__lastname {
+                padding: 1rem;
+            }
+
+            .table__header__email {
+                padding: 1rem;
+            }
+
+            .table__header__phone {
                 padding: 1rem;
             }
 
@@ -51,7 +63,7 @@ if ($admin == false) {
 
             .table__render .item__box {
                 display: grid;
-                grid-template-columns: repeat(4, 1fr) 4rem;
+                grid-template-columns: repeat(6, 1fr) repeat(2, 5rem);
                 border-radius: 1rem;
                 background-color: var(--theme__back);
             }
@@ -74,7 +86,33 @@ if ($admin == false) {
                 align-items: center;
                 padding: 1rem;
                 font-weight: bold;
+                font-size: 1rem;
                 color: var(--theme);
+            }
+
+            .table__render .item__box__firstname {
+                padding-top: 2.5rem;
+                overflow: auto;
+            }
+
+            .table__render .item__box__lastname {
+                padding-top: 2.5rem;
+                overflow: auto;
+            }
+
+            .table__render .item__box__email {
+                padding-top: 2.5rem;
+                overflow: auto;
+            }
+
+            .table__render .item__box__phone {
+                padding-top: 2.5rem;
+                overflow: auto;
+            }
+
+            .table__render .item__box__date {
+                padding-top: 2.5rem;
+                overflow: auto;
             }
 
             .table__render .item__box__options {
@@ -106,11 +144,17 @@ if ($admin == false) {
                     <div class="table">
                         <div class="table__header">
                             <div></div>
-                            <div class="table__header__username -center">
-                                Username
+                            <div class="table__header__firstname -center">
+                                First name
                             </div>
-                            <div class="table__header__password -center">
-                                Password
+                            <div class="table__header__lastname -center">
+                                Last name
+                            </div>
+                            <div class="table__header__email -center">
+                                Email
+                            </div>
+                            <div class="table__header__phone -center">
+                                Phone
                             </div>
                             <div class="table__header__date -center">
                                 Date
@@ -122,7 +166,9 @@ if ($admin == false) {
                                 $sql = GetDatabase();
 
                                 $query = <<<SQL
-                                    SELECT * FROM `users`;
+                                    SELECT *
+                                    FROM `users`
+                                    WHERE `is_verified` = 0;
                                 SQL;
 
                                 $stmt = $sql->prepare($query);
@@ -130,12 +176,12 @@ if ($admin == false) {
                                 $result = $stmt->get_result();
 
                                 while ($user = $result->fetch_assoc()) {
-                                    echo RenderUser($user);
+                                    echo RenderRequest($user);
                                 }
                             ?>
                         </div>
                     </div>
-                    <div class="new">
+                    <!-- <div class="new">
                         <div></div>
                         <div class="new__button">
                             <button class="-button -title">
@@ -144,13 +190,65 @@ if ($admin == false) {
                                 </span>
                             </button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
     </body>
     <script src="script.js"></script>
     <script>
-        document.querySelector(".-sidebar__user > .-sidebar__tab__box").classList.add("-sidebar__tab__box--selected");
+        document.querySelector(".-sidebar__request > .-sidebar__tab__box").classList.add("-sidebar__tab__box--selected");
+
+        function btnAllow(element) {
+            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(4);
+
+            if (confirm("Are you sure you want to verify this user?")) {
+                let form = document.createElement("form");
+                form.action = "server.php";
+                form.method = "post";
+
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "method";
+                input.value = "verifyUser";
+
+                let input2 = document.createElement("input");
+                input2.type = "hidden";
+                input2.name = "id";
+                input2.value = userId;
+
+                form.appendChild(input);
+                form.appendChild(input2);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function btnDeny(element) {
+            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(4);
+
+            if (confirm("Are you sure you want to deny this user?")) {
+                let form = document.createElement("form");
+                form.action = "server.php";
+                form.method = "post";
+
+                let input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "method";
+                input.value = "denyUser";
+
+                let input2 = document.createElement("input");
+                input2.type = "hidden";
+                input2.name = "id";
+                input2.value = userId;
+
+                form.appendChild(input);
+                form.appendChild(input2);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 </html>
