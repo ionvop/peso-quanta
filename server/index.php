@@ -244,22 +244,14 @@ function GetBalance() {
 
 function UpdateUser() {
     $data = GetDatabase();
-
-    if (filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) === false) {
-        echo json_encode([
-            "status" => 400,
-            "message" => "Invalid email"
-        ], JSON_PRETTY_PRINT);
-
-        exit();
-    }
+    $_POST["password"] = base64_encode($_POST["password"]);
 
     $query = <<<SQL
-        UPDATE `users` SET `email` = ? WHERE `id` = ?;
+        UPDATE `users` SET `password` = ? WHERE `id` = ?;
     SQL;
 
     $stmt = $data->prepare($query);
-    $stmt->bind_param("si", $_POST["email"], $_POST["userid"]);
+    $stmt->bind_param("si", $_POST["password"], $_POST["userid"]);
     $stmt->execute();
 
     if ($stmt->errno != 0) {

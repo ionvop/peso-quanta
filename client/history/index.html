@@ -1,48 +1,125 @@
-ailPlaceholderText": "Электрон почта адресыгызны кертегез",
-  "freSignInCreateAccountButton": "Хисап язмасы булдыру",
-  "freSignInButton": "Керү",
-  "syncProductNameShort": "OneDrive",
-  "unlinkSurveyV2DontUseOneDrive": "OneDrive кулланмыйм",
-  "unlinkSurveyV2DontWantOneDrive": "Санагымда OneDrive булуын теләмим",
-  "unlinkSurveyV2NotEnoughStorage": "OneDrive’да барлык файлларым өчен җитәрлек урын юк",
-  "unlinkSurveyV2DontKnowHowToUseOneDrive": "OneDrive’ны ничек кулланырга икәнлеген белмим",
-  "unlinkSurveyV2DontWantToSync": "Файлларның санагыма синхронлашуын теләмим",
-  "exitDialogTitle": "OneDrive’тан чыгаргамы?",
-  "exitDialogDescription": "OneDrive’ны япсагыз, OneDrive папкагыздагы файллар синхронлашмый яки болытка резерв күчермәсе ясалмаячак, шуңа күрә үзгәрешләрегезне җайланмалар аркылы күрмәячәксез.",
-  "exitDialogQuitButton": "OneDrive’тан чыгу",
-  "exitDialogCancelButton": "Баш тарту",
-  "exitSurveyChooseOne": "OneDrive’дан чыгу сәбәбен сайлагыз",
-  "exitSurveyOneDriveAlwaysRunning": "OneDrive’ның һәрвакыт эшләвен теләмим",
-  "exitSurveyDontKnowWhatOneDriveIs": "OneDrive’ның нәрсә икәнен белмим",
-  "exitSurveyDontUseOneDrive": "OneDrive кулланмыйм",
-  "exitSurveyTryingToFixProblem": "OneDrive ярдәмендә проблеманы хәл итәргә тырышам",
-  "exitSurveyPerformance": "Санагымны тизләтергә тырышам",
-  "exitSurveyTooManyNotifications": "Мин артык күп белдерүләр алам",
-  "exitSurveyOther": "Башка",
-  "exitStartOnLogon": "Бу санакка киләсе тапкыр кергәндә OneDrive’ны эшләтеп җибәрергә",
-  "kfmOptoutSurveyPrivacyStatementLink": "Хосусыйлык аңлатмасы",
-  "kfmOptoutSurveyReasonOther": "Башка",
-  "moveWindowInfoAreaScanningNoProgress": "Әзерләнә...",
-  "reportABugChooseImageDialogErrorUnexpected": "Көтелмәгән хата килеп чыкты. Омтылышны кабатлагыз.",
-  "systraMenuSettings": "Параметрлар",
-  "systrayMenuExit": "OneDrive’тан чыгу",
-  "systrayMenuFeedback": "Кире элемтә җибәрү",
-  "systrayMenuGetHelp": "Ярдәм алу",
-  "systrayMenuManageStorage": "Саклагыч белән идарә итү",
-  "systrayMenuUnlockVault": "Шәхси саклагычның биген алу",
-  "systrayMenuLockVault": "Шәхси саклагычны бикләү",
-  "systrayMenuUpgrade": "Яңарту",
-  "systrayMenuReportABug": "Эчке MSFT - хата турында хәбәр итү",
-  "systrayMenuPauseTimerPlural": "{1} сәгать",
-  "systrayMenuPauseTimerSingular": "1 сәгать",
-  "systrayMenuPauseAccessible": "Синхронлаштыруны {1} сәгатькә туктатып тору",
-  "systrayMenuPauseAccessibleOne": "Синхронлаштыруны 1 сәгатькә туктатып тору",
-  "systrayMenuPause": "Синхронлаштыруны туктатып тору",
-  "systrayMenuResume": "Синхронлаштыруны дәвам итү",
-  "errorViewEntryHeaderSyncIssues": "Синхронлаштыру проблемалары",
-  "errorViewEntryHeaderSyncIssue": "Синхронлаштыру проблемасы",
-  "activityFooterButtonOpenfolder": "Папканы ачу",
-  "activityFooterButtonViewonline": "Онлайн карау",
-  "activityFooterButtonRecyclebin": "Кәрзин",
-  "activityFooterButtonGopremium": "Премиум версиягә күчү",
-  "activityHeaderOnedrive
+<html>
+    <head>
+        <title>
+            History
+        </title>
+        <base href="../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .content {
+                display: grid;
+                grid-template-rows: max-content 1fr max-content;
+            }
+
+            .content__mid {
+                overflow: auto;
+            }
+
+            .title {
+                padding: 1rem;
+                background-color: var(--theme);
+                color: #fff;
+                font-weight: bolder;
+            }
+
+            .item {
+                padding: 1rem;
+            }
+
+            .item__box {
+                background-color: #ddd;
+                border-radius: 1rem;
+            }
+
+            .item__box__date {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+            }
+
+            .item__box__date__label {
+                padding: 1rem;
+            }
+
+            .item__box__date__value {
+                padding: 1rem;
+                font-weight: bolder;
+                color: var(--theme);
+                padding-left: 0rem;
+            }
+
+            .item__box__value {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+            }
+
+            .item__box__value__label {
+                padding: 1rem;
+            }
+
+            .item__box__value__value {
+                padding: 1rem;
+                padding-left: 0rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__history">
+            <div class="content -content">
+                <div class="content__top -script__header"></div>
+                <div class="content__mid">
+                    <div class="title -center">
+                        History Report
+                    </div>
+                    <div class="render"></div>
+                </div>
+                <div class="content__bottom -script__buttons"></div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        document.querySelector(".-script__buttons__history > svg").style.color = "var(--theme)";
+
+        fetch(ServerUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                method: "history",
+                userid: GetCookie("peso_quanta__userid")
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.status == 200) {
+                data.message.forEach(element => {
+                    document.querySelector(".render").innerHTML += /* html */`
+                        <div class="item">
+                            <div class="item__box">
+                                <div class="item__box__date">
+                                    <div class="item__box__date__label">
+                                        Date:
+                                    </div>
+                                    <div class="item__box__date__value">
+                                        ${element.time}
+                                    </div>
+                                </div>
+                                <div class="item__box__value">
+                                    <div class="item__box__value__label">
+                                        Coins counted:
+                                    </div>
+                                    <div class="item__box__value__value">
+                                        Php ${element.value}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                alert(data.message);
+            }
+        });
+    </script>
+</html>
