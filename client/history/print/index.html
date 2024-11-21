@@ -7,13 +7,14 @@
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <link rel="stylesheet" href="style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <style>
             .item {
                 padding: 1rem;
             }
 
             .item__box {
-                background-color: #ddd;
                 border-radius: 1rem;
             }
 
@@ -89,7 +90,37 @@
                     `;
                 });
 
-                window.print();
+                const { jsPDF } = window.jspdf;
+                let doc = new jsPDF("p", "pt", "a4");
+
+                doc.html(document.querySelector(".render"), {
+                    callback: function(pdf) {
+                        // Generate a Blob from the PDF
+                        const pdfBlob = pdf.output('blob');
+
+                        // Create a Blob URL
+                        const blobUrl = URL.createObjectURL(pdfBlob);
+
+                        location.href = blobUrl;
+
+                        // // Create a temporary link element
+                        // const link = document.createElement('a');
+                        // link.href = blobUrl;
+                        // link.download = 'history.pdf';
+
+                        // // Programmatically trigger a click on the link
+                        // document.body.appendChild(link); // Append to the document to work in some browsers
+                        // link.click();
+
+                        // // Clean up
+                        // document.body.removeChild(link);
+                        // URL.revokeObjectURL(blobUrl); // Release memory associated with the Blob URL
+                        
+                        setTimeout(() => {
+                            history.back();
+                        }, 1000);
+                    }
+                });
             } else {
                 alert(data.message);
             }
