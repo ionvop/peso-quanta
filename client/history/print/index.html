@@ -1,41 +1,13 @@
 <html>
     <head>
         <title>
-            History
+            History Report
         </title>
-        <base href="../">
+        <base href="../../">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <link rel="stylesheet" href="style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-            .content {
-                display: grid;
-                grid-template-rows: max-content 1fr max-content;
-            }
-
-            .content__mid {
-                overflow: auto;
-            }
-
-            .title__text {
-                padding: 1rem;
-                background-color: var(--theme);
-                color: #fff;
-                font-weight: bolder;
-            }
-
-            .title__print {
-                position: absolute;
-                padding: 1rem;
-                color: #fff;
-                right: 0rem;
-            }
-
-            .title__print > svg {
-                width: 2rem;
-                height: 2rem;
-            }
-
             .item {
                 padding: 1rem;
             }
@@ -77,28 +49,10 @@
         </style>
     </head>
     <body>
-        <div class="main__history">
-            <div class="content -content">
-                <div class="content__top -script__header"></div>
-                <div class="content__mid">
-                    <div class="title -center">
-                        <div class="title__print" onclick="btnPrint(this)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 2C17.5523 2 18 2.44772 18 3V7H21C21.5523 7 22 7.44772 22 8V18C22 18.5523 21.5523 19 21 19H18V21C18 21.5523 17.5523 22 17 22H7C6.44772 22 6 21.5523 6 21V19H3C2.44772 19 2 18.5523 2 18V8C2 7.44772 2.44772 7 3 7H6V3C6 2.44772 6.44772 2 7 2H17ZM16 17H8V20H16V17ZM20 9H4V17H6V16C6 15.4477 6.44772 15 7 15H17C17.5523 15 18 15.4477 18 16V17H20V9ZM8 10V12H5V10H8ZM16 4H8V7H16V4Z"></path></svg>
-                        </div>
-                        <div class="title__text">
-                            History Report
-                        </div>
-                    </div>
-                    <div class="render"></div>
-                </div>
-                <div class="content__bottom -script__buttons"></div>
-            </div>
-        </div>
+        <div class="render"></div>
     </body>
     <script src="script.js"></script>
     <script>
-        document.querySelector(".-script__buttons__history > svg").style.color = "var(--theme)";
-
         fetch(ServerUrl, {
             method: "POST",
             headers: {
@@ -134,13 +88,11 @@
                         </div>
                     `;
                 });
+
+                window.print();
             } else {
                 alert(data.message);
             }
         });
-
-        function btnPrint(element) {
-            location.href = "history/print/";
-        }
     </script>
 </html>
