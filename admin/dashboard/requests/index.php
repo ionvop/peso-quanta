@@ -200,7 +200,7 @@ if ($admin == false) {
         document.querySelector(".-sidebar__request > .-sidebar__tab__box").classList.add("-sidebar__tab__box--selected");
 
         function btnAllow(element) {
-            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(4);
+            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(2);
 
             if (confirm("Are you sure you want to verify this user?")) {
                 let form = document.createElement("form");

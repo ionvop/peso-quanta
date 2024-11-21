@@ -115,7 +115,23 @@ function UpdateAdmin() {
 }
 
 function VerifyUser() {
+    global $BREVO_API_KEY;
     $sql = GetDatabase();
+
+    $query = <<<SQL
+        SELECT * FROM `users` WHERE `id` = ?;
+    SQL;
+
+    $stmt = $sql->prepare($query);
+    $stmt->bind_param("i", $_POST["id"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 0) {
+        Alert("User not found");
+    }
+
+    $user = $result->fetch_assoc();
 
     $query = <<<SQL
         UPDATE `users`
@@ -126,6 +142,28 @@ function VerifyUser() {
     $stmt = $sql->prepare($query);
     $stmt->bind_param("i", $_POST["id"]);
     $stmt->execute();
+
+    $headers = [
+        "Content-Type: application/json",
+        "Accept: application/json",
+        "Api-Key: {$BREVO_API_KEY}"
+    ];
+
+    $body = [
+        "sender" => [
+            "name" => "Peso Quanta",
+            "email" => "ionvop@gmail.com"
+        ],
+        "to" => [
+            [
+                "email" => $user["email"]
+            ]
+        ],
+        "textContent" => "Your Peso Quanta account has been successfully verified, and you may now use the app.\n\nWelcome to Peso Quanta",
+        "subject" => "Account Verification"
+    ];
+
+    SendCurl("https://api.sendinblue.com/v3/smtp/email", "POST", $headers, json_encode($body));
     header("Location: dashboard/requests/");
 }
 
