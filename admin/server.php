@@ -152,7 +152,7 @@ function VerifyUser() {
     $body = [
         "sender" => [
             "name" => "Peso Quanta",
-            "email" => "ionvop@gmail.com"
+            "email" => "pesoquanta@gmail.com"
         ],
         "to" => [
             [

@@ -205,7 +205,7 @@ if ($admin == false) {
         });
 
         function btnOption(element) {
-            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(4);
+            let userId = element.parentElement.querySelector(".item__box__id__label").innerText.substring(2);
 
             if (confirm("Are you sure you want to delete this user?")) {
                 let form = document.createElement("form");
