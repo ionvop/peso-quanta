@@ -32,6 +32,12 @@ if (isset($_POST["method"])) {
         case "updateUser":
             UpdateUser();
             break;
+        case "resetPassword":
+            ResetPassword();
+            break;
+        case "verifyCode":
+            VerifyCode();
+            break;
         default:
             DefaultMethod();
             break;
@@ -61,6 +67,8 @@ function Login() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+
+        exit();
     };
 
     $result = $stmt->get_result();
@@ -121,6 +129,8 @@ function Register() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+        
+        exit();
     }
 
     echo json_encode([
@@ -147,6 +157,8 @@ function Save() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+
+        exit();
     }
 
     echo json_encode([
@@ -173,6 +185,8 @@ function History() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+
+        exit();
     };
 
     $result = $stmt->get_result();
@@ -204,6 +218,8 @@ function GetUser() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+
+        exit();
     };
 
     $result = $stmt->get_result();
@@ -231,6 +247,8 @@ function GetBalance() {
             "status" => 500,
             "message" => $stmt->error
         ], JSON_PRETTY_PRINT);
+
+        exit();
     };
 
     $result = $stmt->get_result();
@@ -263,11 +281,161 @@ function UpdateUser() {
         exit();
     };
 
+    $query = <<<SQL
+        DELETE FROM `password_reset_requests` WHERE `user_id` = ?;
+    SQL;
+
+    $stmt = $data->prepare($query);
+    $stmt->bind_param("i", $_POST["userid"]);
+    $stmt->execute();
+
+    if ($stmt->errno != 0) {
+        echo json_encode([
+            "status" => 500,
+            "message" => $stmt->error
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
     echo json_encode([
         "status" => 200,
         "message" => [
             "id" => $_POST["userid"]
         ]
+    ], JSON_PRETTY_PRINT);
+}
+
+function ResetPassword() {
+    global $BREVO_API_KEY;
+    $data = GetDatabase();
+
+    $query = <<<SQL
+        DELETE FROM `password_reset_requests` WHERE `time` < NOW() - INTERVAL 1 HOUR;
+    SQL;
+
+    $stmt = $data->prepare($query);
+    $stmt->execute();
+
+    if ($stmt->errno != 0) {
+        echo json_encode([
+            "status" => 500,
+            "message" => $stmt->error
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    $query = <<<SQL
+        SELECT * FROM `users` WHERE `email` = ? LIMIT 1;
+    SQL;
+
+    $stmt = $data->prepare($query);
+    $stmt->bind_param("s", $_POST["email"]);
+    $stmt->execute();
+
+    if ($stmt->errno != 0) {
+        echo json_encode([
+            "status" => 500,
+            "message" => $stmt->error
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if (!$user) {
+        echo json_encode([
+            "status" => 401,
+            "message" => "Invalid credentials"
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    $query = <<<SQL
+        INSERT INTO `password_reset_requests`(`user_id`, `code`) VALUES (?, ?);
+    SQL;
+
+    $stmt = $data->prepare($query);
+    $stmt->bind_param("is", $user["id"], $code);
+    $code = "" . rand(100000, 999999);
+    $stmt->execute();
+
+    if ($stmt->errno != 0) {
+        echo json_encode([
+            "status" => 500,
+            "message" => $stmt->error
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    $headers = [
+        "Content-Type: application/json",
+        "Accept: application/json",
+        "Api-Key: {$BREVO_API_KEY}"
+    ];
+
+    $body = [
+        "sender" => [
+            "name" => "Peso Quanta",
+            "email" => "pesoquanta@gmail.com"
+        ],
+        "to" => [
+            [
+                "email" => $user["email"]
+            ]
+        ],
+        "textContent" => "Greetings, your password reset code is {$code}",
+        "subject" => "Password Reset Request",
+    ];
+
+    SendCurl("https://api.sendinblue.com/v3/smtp/email", "POST", $headers, json_encode($body));
+
+    echo json_encode([
+        "status" => 200,
+        "message" => "Password reset email sent"
+    ], JSON_PRETTY_PRINT);
+}
+
+function VerifyCode() {
+    $data = GetDatabase();
+
+    $query = <<<SQL
+        SELECT * FROM `password_reset_requests` WHERE `code` = ? LIMIT 1;
+    SQL;
+
+    $stmt = $data->prepare($query);
+    $stmt->bind_param("s", $_POST["code"]);
+    $stmt->execute();
+
+    if ($stmt->errno != 0) {
+        echo json_encode([
+            "status" => 500,
+            "message" => $stmt->error
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    $result = $stmt->get_result();
+    $request = $result->fetch_assoc();
+
+    if (!$request) {
+        echo json_encode([
+            "status" => 401,
+            "message" => "Invalid credentials"
+        ], JSON_PRETTY_PRINT);
+
+        exit();
+    };
+
+    echo json_encode([
+        "status" => 200,
+        "message" => intval($request["user_id"])
     ], JSON_PRETTY_PRINT);
 }
 

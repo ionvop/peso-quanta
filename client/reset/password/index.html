@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <title>
+            Reset Password
+        </title>
+        <base href="../../">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .title {
+                padding: 5rem;
+                padding-top: 10rem;
+                padding-bottom: 0rem;
+                font-size: 3rem;
+                color: var(--theme);
+            }
+
+            .password {
+                padding: 5rem;
+                padding-bottom: 0rem;
+            }
+
+            .repassword {
+                padding: 5rem;
+                padding-top: 1rem;
+                padding-bottom: 0rem;
+            }
+
+            .button {
+                padding: 5rem;
+            }
+
+            .login {
+                padding: 1rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main__reset__password">
+            <div class="content -content">
+                <div class="title">
+                    <strong>Reset<br>Password</strong>
+                </div>
+                <div class="password">
+                    <input class="-input" type="password" placeholder="New password">
+                </div>
+                <div class="repassword">
+                    <input class="-input" type="password" placeholder="Confirm password">
+                </div>
+                <div class="button -center">
+                    <button class="-button" onclick="btnReset(this)">
+                        Reset Password
+                    </button>
+                </div>
+                <div class="login -center">
+                    <a href="login">Login</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+    <script>
+        let userId;
+
+        fetch(ServerUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                method: "verifyCode",
+                code: new URLSearchParams(location.search).get("code")
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.status == 200) {
+                userId = data.message;
+            } else {
+                location.href = "login/";
+            }
+        });
+
+        function btnReset(element) {
+            if (document.querySelector(".password input").value != document.querySelector(".repassword input").value) {
+                alert("Password not match");
+                return;
+            }
+
+            element.style.backgroundColor = "#aaa";
+            element.disabled = true;
+
+            fetch(ServerUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    method: "updateUser",
+                    password: document.querySelector(".password input").value,
+                    userid: userId
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.status == 200) {
+                    alert("Password reset successfully");
+                    location.href = "login/";
+                } else {
+                    alert(data.message);
+                    element.style.backgroundColor = "";
+                    element.disabled = false;
+                }
+            });
+        }
+    </script>
+</html>

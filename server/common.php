@@ -61,4 +61,23 @@ function GetDatabase() {
     return $result;
 }
 
+function SendCurl($url, $method, $headers, $data) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $result = curl_exec($ch);
+
+    if (curl_errno($ch) != 0) {
+        return false;
+    }
+
+    curl_close($ch);
+    return $result;
+}
+
 ?>

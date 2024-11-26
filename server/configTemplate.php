@@ -5,6 +5,8 @@ $DB_CONFIG = [
     "username" => "",
     "password" => "",
     "database" => ""
-]
+];
+
+$BREVO_API_KEY = "";
 
 ?>

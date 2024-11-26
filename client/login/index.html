@@ -68,7 +68,7 @@
                 </div>
                 <div class="forgot_password">
                     <div></div>
-                    <div class="forgot_password__text -subtitle">
+                    <div class="forgot_password__text -subtitle" onclick="btnResetPassword(this)">
                         Forgot Password?
                     </div>
                 </div>
@@ -115,6 +115,10 @@
                 element.style.backgroundColor = "";
                 element.disabled = false;
             });
+        }
+
+        function btnResetPassword(element) {
+            location.href = "reset/";
         }
     </script>
 </html>
