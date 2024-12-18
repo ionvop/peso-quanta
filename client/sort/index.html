@@ -13,6 +13,10 @@
                 grid-template-rows: max-content 1fr max-content;
             }
 
+            .content__mid {
+                overflow: auto;
+            }
+
             .title {
                 display: grid;
                 grid-template-columns: 5rem 1fr 5rem;
@@ -52,6 +56,55 @@
                 padding: 1rem;
                 padding-top: 3rem;
             }
+
+            .summary {
+                padding-top: 3rem;
+            }
+
+            .summary__title {
+                padding: 1rem;
+            }
+
+            .summary__fields {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .summary__fields__year {
+                padding: 1rem;
+            }
+
+            .summary__fields__year > input {
+                width: 100%;
+            }
+
+            .summary__fields__month {
+                padding: 1rem;
+            }
+
+            .summary__fields__month > select {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1.5rem;
+            }
+
+            .summary__result {
+                padding: 1rem;
+            }
+
+            .summary__result .item {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+            }
+
+            .summary__result .item__label {
+                padding: 1rem;
+                font-weight: bolder;
+            }
+
+            .summary__result .item__value {
+                padding: 1rem;
+            }
         </style>
     </head>
     <body>
@@ -80,6 +133,34 @@
                         </div>
                     </div>
                     <div class="result -title -center"></div>
+                    <div class="summary">
+                        <div class="summary__title -title -center">
+                            Summary
+                        </div>
+                        <div class="summary__fields">
+                            <div class="summary__fields__year">
+                                <input class="-input" type="number" onchange="updateSummary()">
+                            </div>
+                            <div class="summary__fields__month">
+                                <select onchange="updateSummary()">
+                                    <option value="0">All</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="summary__result"></div>
+                    </div>
                 </div>
                 <div class="content__bottom -script__buttons"></div>
             </div>
@@ -88,6 +169,8 @@
     <script src="script.js"></script>
     <script>
         let data = [];
+
+        document.querySelector(".summary__fields__year > input").value = new Date().getFullYear();
 
         fetch(ServerUrl, {
             method: "POST",
@@ -101,6 +184,7 @@
         }).then(response => response.json()).then(res => {
             if (res.status == 200) {
                 data = res.message;
+                updateSummary();
             } else {
                 alert(res.message);
             }
@@ -127,6 +211,115 @@
             });
 
             document.querySelector(".result").innerHTML = `Php ${result}`;
+        }
+
+        function updateSummary() {
+            let temp = [];
+
+            data.forEach(element => {
+                temp.push({
+                    value: element.value,
+                    time: new Date(element.time).getTime() / 1000
+                });
+            });
+
+            console.log(temp);
+
+            let year = document.querySelector(".summary__fields__year > input").value;
+            year = Number(year);
+            let month = document.querySelector(".summary__fields__month > select").value;
+            month = Number(month);
+
+            if (month == 0) {
+                month = false;
+            }
+
+            let result = processData(temp, year, month);
+            document.querySelector(".summary__result").innerHTML = "";
+            console.log(result);
+
+            if (Object.keys(result).length == 12) {
+                let months = {
+                    1: "January",
+                    2: "February",
+                    3: "March",
+                    4: "April",
+                    5: "May",
+                    6: "June",
+                    7: "July",
+                    8: "August",
+                    9: "September",
+                    10: "October",
+                    11: "November",
+                    12: "December"
+                };
+
+                for (let key in result) {
+                    document.querySelector(".summary__result").innerHTML += /* html */`
+                        <div class="item">
+                            <div class="item__label">
+                                ${months[key]}
+                            </div>
+                            <div class="item__value">
+                                Php ${result[key]}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                for (let key in result) {
+                    document.querySelector(".summary__result").innerHTML += /* html */`
+                        <div class="item">
+                            <div class="item__label">
+                                Day ${key}
+                            </div>
+                            <div class="item__value">
+                                Php ${result[key]}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function processData(data, year, month) {
+            // Helper function to initialize an object with keys and zero values
+            function initializeObject(keys) {
+                const obj = {};
+                keys.forEach(key => {
+                    obj[key] = 0;
+                });
+                return obj;
+            }
+
+            if (!month) {
+                // No month provided, aggregate by months
+                const result = initializeObject(Array.from({ length: 12 }, (_, i) => (i + 1).toString()));
+
+                data.forEach(({ value, time }) => {
+                    const date = new Date(time * 1000);
+                    if (date.getFullYear() === year) {
+                        const monthKey = (date.getMonth() + 1).toString();
+                        result[monthKey] += value;
+                    }
+                });
+
+                return result;
+            } else {
+                // Month provided, aggregate by days
+                const daysInMonth = new Date(year, month, 0).getDate();
+                const result = initializeObject(Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()));
+
+                data.forEach(({ value, time }) => {
+                    const date = new Date(time * 1000);
+                    if (date.getFullYear() === year && date.getMonth() + 1 === month) {
+                        const dayKey = date.getDate().toString();
+                        result[dayKey] += value;
+                    }
+                });
+
+                return result;
+            }
         }
     </script>
 </html>
