@@ -1,4 +1,4 @@
-let ServerUrl = "https://orange-jaguar-922960.hostingersite.com/peso-quanta/server/";
+let ServerUrl = "../server/";
 
 SetHeader(document.querySelector(".-script__header"));
 SetButtons(document.querySelector(".-script__buttons"));
